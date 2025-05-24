@@ -23,7 +23,7 @@ function Add() {
 export default function PickProduct({ onAddItem }) {
   return (
     <div
-      className="p-[.8rem] border-[var(--primary-color-red)] flex justify-center font-medium gap-3"
+      className=" cursor-pointer p-[.8rem] border-[var(--primary-color-red)] flex justify-center font-medium gap-3"
       onClick={onAddItem}
     >
       <Add /> Add to Card

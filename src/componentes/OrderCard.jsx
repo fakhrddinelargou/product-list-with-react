@@ -1,3 +1,4 @@
+import { CircleX } from 'lucide-react';
 
 function Illustration() {
   return (
@@ -79,33 +80,19 @@ function Carbon() {
   );
 }
 
-const orderCard = ({ order }) => {
-  let totalPrices = [];
-
-  let totalCount = 0;
-  order.map((item) => {
-    totalCount += item.count;
-    let totalPriceOne = item.count * item.price;
-    totalPrices.push(totalPriceOne);
-    return null;
-  });
-
-  const grandTotal = totalPrices.reduce((acc, price) => acc + price, 0);
-  console.log(grandTotal);
-
+const OrderCard = ({totalCount,  grandTotal ,order , totalPrices , ConfirmOrder , removeItem}) => {
+ 
   return (
     <div className="w-full h-auto bg-white rounded-2xl px-7  py-6 ">
       <div className=" text-[var(--primary-color-red)] py-5 font-bold text-3xl ">
         Your Cart ({totalCount})
       </div>
       {order.map((product, index) => {
-        let totalPrice = 0;
-        totalPrice += product.count * product.price;
-        console.log(totalPrice);
+   
         return (
           <div
             key={product.name}
-            className="h-[8rem] flex flex-col justify-center border-b
+            className=" relative  h-[8rem] flex flex-col justify-center border-b
 border-[#cbcbcb3a]"
           >
             <span className="text-[var(--primary-color-rose-900)] font-bold">
@@ -122,6 +109,7 @@ border-[#cbcbcb3a]"
                 ${totalPrices[index].toFixed(2)}
               </span>
             </div>
+            <CircleX strokeWidth={1.25} size={18} color="hsl(12, 20%, 44%)" className=' absolute  right-5'  onClick={()=> removeItem(product.name)}  />
           </div>
         );
       })}
@@ -138,7 +126,7 @@ border-[#cbcbcb3a]"
               <Carbon /> this is a <span className="font-medium text-[var(--primary-color-rose-900)]">carbon-neutral</span> delivery
             </p>
           </div>
-          <div className="bg-[var(--primary-color-red)] py-4 text-center rounded-[8rem] mt-8 text-white">
+          <div onClick={ConfirmOrder}  className=" cursor-pointer bg-[var(--primary-color-red)] py-4 text-center rounded-[8rem] mt-8 text-white">
             Confirm Order
           </div>
         </div>
@@ -152,4 +140,4 @@ border-[#cbcbcb3a]"
   );
 };
 
-export default orderCard;
+export default OrderCard;

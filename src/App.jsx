@@ -3,6 +3,7 @@ import ProductsCard from "./componentes/ProductsCard";
 import OrderCard from "./componentes/OrderCard";
 import OrderConfirmed from "./componentes/OrderConfirmed"
 import "./App.css"
+import { LeafyGreen } from "lucide-react";
 const fetchData = async () => {
   const response = await fetch("./data.json");
   const data = await response.json();
@@ -24,9 +25,19 @@ const [selectProduct,setSelectProduct] = useState([])
       );
     })();
   }, []);
-  console.log(products);
+ 
 
-
+  
+  let totalPrices = [];
+  let totalCount = 0;
+  selectProduct.map((item) => {
+    totalCount += item.count;
+    let totalPriceOne = item.count * item.price;
+    totalPrices.push(totalPriceOne);
+    return null;
+  });
+  const grandTotal = totalPrices.reduce((acc, price) => acc + price, 0);
+  console.log(grandTotal);
 
 
 const onChangeCount = (name, value) => {
@@ -45,14 +56,40 @@ useEffect(()=>{
     setSelectProduct(selected)
 },[products])
 
+  const [show, setShow] = useState(false)
+const ConfirmOrder = ()=>{
+setShow(true)
+}
 
 
+const startNewOrder = () => {
+  setProducts((prev) =>
+    prev.map((product) => ({
+      ...product,
+      count: 0,
+    }))
+  );
+  setSelectProduct([])
+  setShow(false)
+};
 
-  console.log(selectProduct);
+
+const removeItem = (name) => {
+  console.log("Removing:", name);
+
+  setProducts((prev) =>
+    prev.map((product) =>
+      product.name === name ? { ...product, count: 0 } : product
+    )
+  );
+};
+
 
   return (
-    <div className="py-20 flex gap-4  justify-center">
+    <div className="py-20">
 
+      <h1 className=" text-7xl pl-25 pb-5 font-bold text-[var(--primary-color-rose-900)] " >Desserts</h1>
+    <div className=" flex gap-4  justify-center">
       <div className=" grid grid-cols-3 gap-10 px-6">
         {products.map((product) => {
           return (
@@ -64,16 +101,17 @@ useEffect(()=>{
               category={product.category}
               price={product.price}
               count={product.count}
-             
-            />
+              
+              />
           );
         })}
       </div>
       <div className=" w-[25%] h-auto ">
-        <OrderCard order={selectProduct}  />
+        <OrderCard  totalCount={totalCount}  grandTotal={grandTotal} order={selectProduct} totalPrices={totalPrices} ConfirmOrder={ConfirmOrder} removeItem={removeItem}  />
       </div>
-            <OrderConfirmed order={selectProduct}/>
+         {  show ?  <OrderConfirmed totalCount={totalCount}  grandTotal={grandTotal} order={selectProduct}  startNewOrder={startNewOrder} /> : null}
     </div>
+        </div>
   );
 }
 
